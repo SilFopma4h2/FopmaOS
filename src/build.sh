@@ -10,13 +10,15 @@ mkdir -p build
 echo "Compiling boot.asm..."
 nasm -f elf32 boot.asm -o build/boot.o
 
-# Compile the kernel
+# Compile the kernel 
+# Added -fno-use-cxa-atexit to fix '__cxa_atexit' and '__dso_handle' undefined references
 echo "Compiling kernel.cpp..."
-g++ -m32 -ffreestanding -fno-exceptions -fno-rtti -O2 -c kernel.cpp -o build/kernel.o
+g++ -m32 -ffreestanding -fno-exceptions -fno-rtti -fno-use-cxa-atexit -O2 -c kernel.cpp -o build/kernel.o
 
 # Link the kernel
+# Added -z noexecstack to silence the .note.GNU-stack warning
 echo "Linking kernel..."
-ld -m elf_i386 -T linker.ld -o build/kernel.bin build/boot.o build/kernel.o
+ld -m elf_i386 -z noexecstack -T linker.ld -o build/kernel.bin build/boot.o build/kernel.o
 
 # Check if kernel.bin exists and has size greater than 0
 if [ ! -s build/kernel.bin ]; then
@@ -41,4 +43,5 @@ EOF
 grub-mkrescue -o build/cos.iso build/iso
 
 # Run the OS in QEMU
+echo "Launching QEMU..."
 qemu-system-i386 -cdrom build/cos.iso
