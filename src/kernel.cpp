@@ -5,12 +5,13 @@
 #include "include/memorys.h"
 #include "include/screens.h"
 #include "include/io.h"
-
+const char* version = "v0.0.1 beta";
 // ============================================================================
 // GLOBALE VARIABELEN & BUFFERS
 // ============================================================================
 // Deze buffer blijft in het RAM-geheugen bestaan, ook als je de editor sluit.
 vector<char> globale_tekst_buffer;
+
 
 // ============================================================================
 // TOETSENBORD INPUT FUNCTIES
@@ -255,11 +256,22 @@ extern "C" void kernel_main(multiboot_info *mbi)
                 "  version  - Toon OS versie\n"
                 "  ping     - Test of de kernel reageert\n"
                 "  reboot   - Start de computer opnieuw op\n"
-                "  shutdown - Sluit het systeem af\n",
+                "  shutdown - Sluit het systeem af\n"
+                "  contributers - View all the contributers and how to contribute to this project\n",
                 VGA_COLOR_LIGHT_GREEN
             );
         }
-        
+        else if (is_command(i, "contributers")){
+            print_string(
+                "Contributer 1: Ethan. Source code maker.\n"
+                "Github link contributer 1: https://github.com/EHowardHill\n"
+                "Contributer 2: Sil Fopma. Owner of this repo and added more commands\n"
+                "Github link contributer 2: https://github.com/SilFopma4h2\n"
+                "To contribute to this project. Just write some usefull code and create a pull reqeust!\n"
+                "Thanks you all for contributing to this project!\n",
+                VGA_COLOR_LIGHT_GREEN
+            );
+        }
         // COMMANDO: editor
         else if (is_command(i, "editor"))
         {
@@ -289,7 +301,29 @@ extern "C" void kernel_main(multiboot_info *mbi)
         {
             cls();
         }
-
+        //COMMANDO: fopfetch
+        else if (is_command(i, "fopfetch"))
+        {
+            print_string(
+                "   ______                                 ____   _____ \n"
+                "  |  ____|                               / __ \\ / ____|\n"
+                "  | |__ ___  _ __  _ __ ___   __ _      | |  | | (___  \n"
+                "  |  __/ _ \\| '_ \\| '_ ` _ \\ / _` |     | |  | |\\___ \\ \n"
+                "  | | | (_) | |_) | | | | | | (_| |     | |__| |____) |\n"
+                "  |_|  \\___/| .__/|_| |_| |_|\\__,_|      \\____/|_____/ \n"
+                "            | |                                        \n"
+                "            |_|                                        \n\n",
+                VGA_COLOR_LIGHT_CYAN
+            );
+            print_string(version, VGA_COLOR_LIGHT_CYAN);
+            print_string("\n");
+            print_string("Free Memory: ", VGA_COLOR_LIGHT_CYAN);
+            print_int(mbi->mem_lower + mbi->mem_upper);
+            print_string(" KB\n", VGA_COLOR_LIGHT_CYAN);
+            print_string("\n");
+            
+            
+        }
         // COMMANDO: ping
         else if (is_command(i, "ping"))
         {
